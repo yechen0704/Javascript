@@ -132,9 +132,11 @@ const Model = (() => {
         #onChange;
         #inventory;
         #cart;
+        #page;
         constructor() {
             this.#inventory = [];
             this.#cart = [];
+            this.#page = sessionStorage.getItem("page")??1;
         }
         get cart() {
             return this.#cart;
@@ -149,6 +151,16 @@ const Model = (() => {
         }
         set inventory(newInventory) {
             this.#inventory = newInventory;
+        }
+        get pages() {
+            return Math.ceil(Number(this.#inventory.length) / 2);
+        }
+        get page(){
+            return this.#page;
+        }
+        set page(pageNum) {
+            this.#page = pageNum;
+            this.#onChange;
         }
 
         subscribe(cb) { }
@@ -174,10 +186,15 @@ const Model = (() => {
 
 const View = (() => {
     // implement your logic for View
-    const renderInventory = (inventory) => {
+    const renderInventory = (inventory, pageId) => {
         const inventoryItems = document.querySelector(".inventory-items");
         inventoryItems.innerHTML = "";
-        inventory.forEach((item) => {
+        const itemsPerPage = 2;
+        const startIdx = (pageId - 1) * itemsPerPage;
+        const endIdx = Math.min(startIdx + itemsPerPage, inventory.length);
+        const itemsToRender = inventory.slice(startIdx, endIdx);
+
+        itemsToRender.forEach((item) => {
             const li = document.createElement("li");
             li.className = "inventory-item";
             li.dataset.id = item.id;
@@ -190,6 +207,20 @@ const View = (() => {
             `;
             inventoryItems.appendChild(li);
         });
+    };
+
+    const renderPagination = (pages, currentPage) => {
+        const pageContainer = document.querySelector(".page-container");
+        pageContainer.innerHTML = "";
+        for (let i = 1; i < pages; i++) {
+            const button = document.createElement("button");
+            button.className = "page";
+            button.textContent = i;
+            if (i === currentPage) {
+                button.classList.add("active");
+            }
+            pageContainer.appendChild(button);
+        }
     }
 
     const renderCart = (cart) => {
@@ -212,7 +243,8 @@ const View = (() => {
     }
     return {
         renderInventory,
-        renderCart
+        renderCart,
+        renderPagination,
     };
 
     const renderCartUpdateItem = (cart) => {
@@ -241,16 +273,20 @@ const Controller = ((model, view) => {
         state.inventory = inventory;
         // console.log(state.inventory);
         state.cart = cart;
+        const pages = inventory.length;
+        state.pages = pages;
     }
 
     const render = () => {
         view.renderInventory(state.inventory);
         view.renderCart(state.cart);
+        view.renderPagination(state.pages)
     }
 
     const setupEventListeners = () => {
         const inventoryItems = document.querySelector(".inventory-items");
         const cartItems = document.querySelector(".cart-container");
+        const pageContainer = document.querySelector(".page-container");
         inventoryItems.addEventListener("click", async (event) => {
             const target = event.target;
             if (target.classList.contains("add-btn")) {
@@ -277,6 +313,14 @@ const Controller = ((model, view) => {
 
                 }
                 view.renderCart(state.cart);
+            }
+        });
+
+        pageContainer.addEventListener("click", (event) => {
+            if (event.target.classList.contains("page")) {
+                const pageNum = parseInt(event.target.textContent);
+                state.page = pageNum;
+                view.renderInventory(state.inventory,pageNum);
             }
         });
 

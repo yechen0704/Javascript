@@ -198,7 +198,69 @@ DOM > Element > properties
 > 1. ele.innerHTML
     - If unvalidated user input is inserted directly into innerHTML, a malicious user could inject malicious JavaScript code, leading to a security vulnerability in the website
     - it is best to use safer DOM manipulation methods to manipulate an element's content, such as : textContent, createElement and appendChild etc.
+> 2. Use DOM methods 1.: Use DOM methods in JavaScript, such as 1. createElement1. and 1. appendChild1., to create and add new elements. This method does not execute any HTML code, so it is safer.
+
+IIFE Function : Immediately Invoked Function Expression
+```javascript
+(function(){...})(); // this pair of bracket will invoke function
+
+(() => {})();
+```
 ____
+
+### MVC
+<img src="./assests/MVC.png" width=400 alt="json-servre">
+  
+____
+### Button vs. Submit
+1. default behavior
+    -  type="button": Buttons have no default behavior and require JavaScript to define their functionality. 
+    -  type="submit": The button will submit the data of the form it belongs to and trigger the submit action of the form, which may refresh the page or load a new page.
+2. form data
+    -  `<button>` need additional JavaScript code is required to get the form data and process it.
+    - `<form>` When you click the submit button inside an element, the browser will automatically collect all input data in the form and submit it as form data.
+    ```javascript
+    <form id="myForm">
+      <input type="text" name="username" placeholder="Username">
+      <input type="password" name="password" placeholder="Password">
+      <button type="button" id="submitButton">Submit</button>
+    </form>
+    document.getElementById('submitButton').addEventListener('click', function() {
+    var formData = {
+      username: document.getElementById('myForm').elements['username'].value,
+      password: document.getElementById('myForm').elements['password'].value
+    };
+  
+    fetch('submit_url', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    ```
+3. prevent `submit` default behavior
+    - type = "button" 
+    - `event.preventDefault()`: 
+    ```javascript
+      document.getElementById('myForm').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        var formData = {
+          username: document.getElementById('myForm').elements['username'].value,
+          password: document.getElementById('myForm').elements['password'].value
+        };
+      
+        fetch('submit_url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+      });
+    ```
+___
+
 ### Reference
 https://github.com/shahedbd/jsonServer
 https://www.npmjs.com/package/live-server

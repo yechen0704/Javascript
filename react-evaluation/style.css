@@ -127,3 +127,23 @@ button {
     padding-left: 10px;
     padding-right: 10px;
 }
+.page {
+    color: black;
+    display: inline;
+    padding: 5px;
+    margin: 5px;
+    justify-content: center;
+}
+.inventory-container{
+    display: flex;
+    align-items: center;
+}
+.inventory-title{
+    text-align: center;
+}
+
+.page.active {
+    background-color: #007bff;
+    font-weight: bold; 
+    color: white;
+}
