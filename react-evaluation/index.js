@@ -227,6 +227,10 @@ const View = (() => {
         const cartItems = document.querySelector(".cart-items");
         cartItems.innerHTML = "";
 
+        if (cart === null || cart === undefined) {
+            return;
+        }
+    
         cart.forEach((item) => {
             const li = document.createElement("li");
             li.className = "cart-item";
@@ -279,7 +283,11 @@ const Controller = ((model, view) => {
 
     const render = () => {
         view.renderInventory(state.inventory);
-        view.renderCart(state.cart);
+        if (state.cart !== null) { 
+            view.renderCart(state.cart);
+        } else {
+            view.renderCart([]); 
+        }
         view.renderPagination(state.pages)
     }
 
@@ -340,8 +348,9 @@ const Controller = ((model, view) => {
             } else if (target.classList.contains("checkout-btn")) {
                 //console.log("checkout detect");
                 API.checkout();
-                fetchData();
                 state.cart = null;
+                fetchData();
+                //state.cart = null;
                 view.renderCart();
             }
         });

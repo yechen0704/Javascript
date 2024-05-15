@@ -23,6 +23,7 @@ const APIs = (() => {
 const Model = (() => {
     class State {
         #todos; // []
+        #onchange;
         constructor() {
             this.#todos = [];
         }
@@ -33,6 +34,11 @@ const Model = (() => {
 
         set todos(newTodos) {
             this.#todos = newTodos;
+            this.#onchange();
+        }
+
+        subscribe(cb) {
+            this.#onchange = cb
         }
     }
     const { getTodos, createTodo } = APIs;
@@ -46,10 +52,10 @@ const Model = (() => {
 const View = (() => {
     const todolistEl = document.querySelector(".todolist");
     const addBtnEle = document.querySelector(".todo__add-btn");
-    const getInputEle = document.querySelector(".todo__input");
+    const inputEle = document.querySelector(".todo__input");
 
     const getInputValue = () => {
-        return getInputEle.value;
+        return inputEle.value;
     }
     const renderTodos = (todos) => {
         let todosTemp = "";
@@ -74,11 +80,19 @@ const Controller = ((view, model) => {
     // state instance
     const state = new model.State();
 
-    const setUpHandler = () => {
+    const setUpAddHandler = () => {
         view.addBtnEle.addEventListener("click", (event) => {
             event.preventDefault();
             const inputValue = view.getInputValue();
             console.log(inputValue);
+            const newTodo = {
+                content: inputValue
+            }
+            console.log(newTodo);
+            model.createTodo(newTodo).then((data) => {
+                //console.log("data" + data);
+                state.todos = [...state.todos, data];
+            }); 
         });
     };
 
@@ -86,13 +100,16 @@ const Controller = ((view, model) => {
     const init = () => {
         model.getTodos().then(data => {
             state.todos = data;
-            view.renderTodos(data);
+            //view.renderTodos(data);
         });
     }
 
     const bootstrap = () => {
         init();
-        setUpHandler(); // set event listener
+        state.subscribe(() => {
+            view.renderTodos(state.todos);
+        })
+        setUpAddHandler(); // set event listener
     }
 
     return {
