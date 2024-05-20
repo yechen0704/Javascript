@@ -17,7 +17,12 @@ const APIs = (() => {
         }).then((res) => res.json());
     };
 
-    return { getTodos, createTodo };
+    const deleteTodo = (id) => {
+        console.log("id", id);
+        return fetch(`${baseURL}/${id}`, {method: "DELETE"}).then((res) => res.json());
+    }
+
+    return { getTodos, createTodo, deleteTodo};
 })();
 
 const Model = (() => {
@@ -31,7 +36,7 @@ const Model = (() => {
         get todos() {
             return this.#todos;
         }
-
+ 
         set todos(newTodos) {
             this.#todos = newTodos;
             this.#onchange();
@@ -41,11 +46,12 @@ const Model = (() => {
             this.#onchange = cb
         }
     }
-    const { getTodos, createTodo } = APIs;
+    const { getTodos, createTodo, deleteTodo } = APIs;
     return {
         State,
         getTodos,
         createTodo,
+        deleteTodo
     }
 })();
 
@@ -57,13 +63,18 @@ const View = (() => {
     const getInputValue = () => {
         return inputEle.value;
     }
+
+    const clearInput = () => {
+        inputEle.value = "";
+    }
+
     const renderTodos = (todos) => {
         let todosTemp = "";
 
         todos.forEach((todo) => {
             const content = todo.content;
             const liTemp = ` 
-            <li>
+            <li id=${todo.id}>
                 <span>${content}</span>
                 <button class="todo__dlt-btn"> delete</button>
                 <button class="todo_edit-btn">edit</button>
@@ -73,7 +84,7 @@ const View = (() => {
         todolistEl.innerHTML = todosTemp;
     }
 
-    return { renderTodos, addBtnEle, getInputValue }
+    return { renderTodos, addBtnEle, todolistEl, getInputValue, clearInput }
 })();
 
 const Controller = ((view, model) => {
@@ -92,9 +103,25 @@ const Controller = ((view, model) => {
             model.createTodo(newTodo).then((data) => {
                 //console.log("data" + data);
                 state.todos = [...state.todos, data];
+                view.clearInput();
             }); 
         });
     };
+
+    // event delegation
+    const setUpDeleteHandler = () => {
+        view.todolistEl.addEventListener("click", (event) => {
+            // console.log(event.target);
+            const element = event.target;
+            if(element.className === "todo__dlt-btn"){
+                const id = element.parentElement.getAttribute("id");
+                console.log(id); 
+                model.deleteTodo(id).then((data) => {
+                    state.todos = state.todos.filter((item) => item.id !== id);
+                });
+            }
+        })
+    }
 
     // handle events
     const init = () => {
@@ -103,13 +130,14 @@ const Controller = ((view, model) => {
             //view.renderTodos(data);
         });
     }
-
+ 
     const bootstrap = () => {
         init();
         state.subscribe(() => {
             view.renderTodos(state.todos);
         })
         setUpAddHandler(); // set event listener
+        setUpDeleteHandler();
     }
 
     return {

@@ -323,6 +323,8 @@ IIFE Function : Immediately Invoked Function Expression
      });
    ```
 
+4. event delegation : It is a programming technology for handling events, especially frequently used in web development. Its basic idea is to use the event bubbling mechanism to delegate events of child elements to a common parent element for processing.
+
 ---
 
 ### Reference
