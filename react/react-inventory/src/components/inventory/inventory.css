@@ -1,0 +1,82 @@
+.inventory-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	width: 30%;
+}
+
+h1 {
+	font-weight: bold;
+	text-align: center;
+}
+
+.add_to_cart_btn {
+	background-color: #4b6daa;
+}
+
+.decrease_amount_btn {
+	background-color: #a5494c;
+}
+
+.increse_amount_btn {
+	background-color: #7eae51;
+}
+
+.inventory-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	width: 30%;
+}
+
+
+.inventory-list {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	justify-content: center;
+}
+
+
+.inventory_item {
+	border-radius: 8px;
+	display: flex;
+	margin: 10px;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: #dfdac8;
+}
+
+.inventory_name {
+	width: 100px;
+	text-align: center;
+}
+
+
+.inventory_btns {
+	border-radius: 8px;
+	color: white;
+	text-align: center;
+	margin: 5px;
+	padding: 12px 25px;
+	font-size: 18px;
+	border: none;
+}
+
+.inventory-pagination {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+#page-label {
+	text-align: center;
+}
+
+.inv-prev-btn {
+	background-color: #556ca9;
+}
+
+.inv-next-btn {
+	background-color: #556ca9;
+}
