@@ -1,28 +1,16 @@
 {
-    "todos": [
-      {
-        "id": "8188",
-        "content": "1"
-      },
-      {
-        "id": "fef2",
-        "content": "2"
-      },
-      {
-        "id": "c1c2",
-        "content": "3"
-      },
-      {
-        "id": "43cb",
-        "content": "8"
-      },
-      {
-        "id": "5c89",
-        "content": "1"
-      },
-      {
-        "id": "6003",
-        "content": "444"
-      }
-    ]
-  }
+  "todos": [
+    {
+      "id": "c893",
+      "content": "1"
+    },
+    {
+      "id": "840f",
+      "content": "2"
+    },
+    {
+      "id": "1f7e",
+      "content": "3"
+    }
+  ]
+}
