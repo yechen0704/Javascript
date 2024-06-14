@@ -1,3 +1,8 @@
+### Environment Setup
+1. npx create-react-app .
+2. tsc --init : create `tsconfig.json` file
+
+____
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
